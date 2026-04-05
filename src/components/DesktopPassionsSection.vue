@@ -82,19 +82,8 @@
               <!-- Running Content -->
               <div v-if="passion.id === 'running'" class="passion-content">
                 <div class="content-section">
-                  <h3>🏃 Mes Courses Récentes</h3>
-                  <div class="runs-list">
-                    <div v-for="run in sportData.publicRuns" :key="run.id" class="run-item">
-                      <div class="run-info">
-                        <p class="run-name">{{ run.name }}</p>
-                        <p class="run-date">{{ formatRunDate(run.startDate) }}</p>
-                      </div>
-                      <div class="run-stats">
-                        <span class="stat">{{ (run.distance / 1000).toFixed(1) }}km</span>
-                        <span class="stat">{{ formatPace(run.distance, run.movingTime) }}</span>
-                      </div>
-                    </div>
-                  </div>
+                  <h3>🏃 Course à Pied</h3>
+                  <p>Passionné par la course et l'entraînement en trail.</p>
                 </div>
                 <div class="actions">
                   <a href="https://www.strava.com/athlete/training?sport_type=Run" target="_blank" rel="noopener noreferrer" class="action-link">

@@ -142,7 +142,7 @@ export const appData: AppData = {
       impact: "Architecture fullstack type-safe avec validation robuste, interface intuitive et gestion multimédia avancée.",
       status: "Running_Stable",
       github: "https://github.com/Lamazaii/vytre",
-      image: "/src/assets/images/vytre.png",
+      image: "/images/vytre.png",
       competencies: [
         {
           code: "C1",
@@ -260,12 +260,48 @@ export const appData: AppData = {
     images: {
       powerlifting:
         "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1400&h=900&fit=crop",
+      powerliftingAlt:
+        "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1400&h=900&fit=crop",
+      squatCompetition:
+        "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1400&h=900&fit=crop",
+      benchCompetition:
+        "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1400&h=900&fit=crop",
+      deadliftCompetition:
+        "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1400&h=900&fit=crop",
       runningFallback:
         "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1400&h=900&fit=crop"
     },
-    powerlifting: {
-      totalLifts: 156,
-      personalBest: 225
+    powerlifting: [
+      {
+        label: "Squat",
+        value: "140",
+        unit: "kg",
+        icon: "🦵",
+        colorClass: "squat"
+      },
+      {
+        label: "Bench Press",
+        value: "90",
+        unit: "kg",
+        icon: "🏋️",
+        colorClass: "bench"
+      },
+      {
+        label: "Deadlift",
+        value: "180",
+        unit: "kg",
+        icon: "💪",
+        colorClass: "deadlift"
+      }
+    ],
+    trail: {
+      name: "Trail Run",
+      dist: "25 km",
+      status: "Active",
+      elevation: "+800 m",
+      duration: "2h30",
+      pace: "6'00/km",
+      location: "Bretagne"
     }
   }
 }

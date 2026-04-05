@@ -11,10 +11,11 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "vue": "^3.4.31",
-    "framer-motion": "^10.16.4"
+    "framer-motion": "^10.16.4",
+    "vue": "^3.4.31"
   },
   "devDependencies": {
+    "@types/node": "^25.5.2",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/language-core": "^1.8.27",
     "typescript": "^5.4.5",
