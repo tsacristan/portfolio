@@ -111,7 +111,7 @@
                   <div class="lifts-grid">
                     <div v-for="lift in sportData.powerlifting" :key="lift.label" class="lift-card">
                       <div class="lift-icon">
-                        <i data-lucide="dumbbell"></i>
+                        💪
                       </div>
                       <div class="lift-info">
                         <p class="lift-label">{{ lift.label }}</p>
@@ -122,8 +122,7 @@
                 </div>
                 <div class="actions">
                   <button class="action-link">
-                    <i data-lucide="target"></i>
-                    Progression: 92%
+                    🎯 Progression: 92%
                   </button>
                 </div>
               </div>
@@ -154,8 +153,7 @@
                 </div>
                 <div class="actions">
                   <button class="action-link">
-                    <i data-lucide="map"></i>
-                    Voir l'itinéraire
+                    📍 Voir l'itinéraire
                   </button>
                 </div>
               </div>
