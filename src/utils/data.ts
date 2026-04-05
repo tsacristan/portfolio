@@ -6,7 +6,7 @@ export const appData: AppData = {
     role: "Étudiant BUT Informatique",
     tagline: "Développement Logiciel // Athlète Hybride // Optimisation de Systèmes",
     email: "thuriansacristan@gmail.com",
-    location: "Bretagne, Rennes",
+    location: "Bretagne (Rennes) • Limoges",
     github: "https://github.com/tsacristan",
     linkedin: "#",
     cv: "./CV_Sacristan_Thurian.pdf"
