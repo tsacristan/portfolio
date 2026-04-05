@@ -2,7 +2,7 @@
   <header class="topbar">
     <nav class="container nav">
       <button class="brand" @click="selectAndNavigate('hero')" type="button">
-        <span class="brand-icon"><i data-lucide="radar"></i></span>
+        <span class="brand-icon">📡</span>
         <span>{{ profile.name }}</span>
       </button>
 
@@ -19,7 +19,7 @@
       </div>
 
       <button class="menu-btn" @click="toggleMenu" aria-label="Ouvrir le menu" type="button">
-        <i data-lucide="menu"></i>
+        ☰
       </button>
     </nav>
 
