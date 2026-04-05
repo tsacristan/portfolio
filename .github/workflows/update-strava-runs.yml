@@ -1,0 +1,43 @@
+name: Update Strava runs
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-runs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Update cached runs JSON
+        env:
+          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
+          STRAVA_PER_PAGE: "50"
+          STRAVA_MAX_PAGES: "8"
+        run: node scripts/update-strava-runs.mjs
+
+      - name: Commit and push if changed
+        run: |
+          if [ -n "$(git status --porcelain strava-runs.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add strava-runs.json
+            git commit -m "chore: refresh Strava runs cache"
+            git push
+          else
+            echo "No changes to commit"
+          fi

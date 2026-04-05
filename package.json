@@ -1,0 +1,23 @@
+{
+  "name": "portfolio-thurian",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Portfolio personnel de Thurian Sacristan",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "vue": "^3.4.31",
+    "framer-motion": "^10.16.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/language-core": "^1.8.27",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10"
+  }
+}
