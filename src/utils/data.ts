@@ -244,38 +244,6 @@ export const appData: AppData = {
 
   sport: {
     stravaUrl: "",
-    hevyUrl: "",
-    powerlifting: [
-      {
-        label: "Squat",
-        value: "140",
-        unit: "kg",
-        icon: "🦵",
-        colorClass: "squat"
-      },
-      {
-        label: "Bench Press",
-        value: "90",
-        unit: "kg",
-        icon: "🏋️",
-        colorClass: "bench"
-      },
-      {
-        label: "Deadlift",
-        value: "180",
-        unit: "kg",
-        icon: "💪",
-        colorClass: "deadlift"
-      }
-    ],
-    trail: {
-      name: "Trail Run",
-      dist: "25 km",
-      status: "Active",
-      elevation: "+800 m",
-      duration: "2h30",
-      pace: "6'00/km",
-      location: "Bretagne"
-    }
+    hevyUrl: ""
   }
 }

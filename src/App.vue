@@ -14,7 +14,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue"
-import { useSmoothMotion } from "@/composables/useSmoothMotion"
 import type { Tab } from "@/types"
 import { appData } from "@/utils/data"
 
@@ -35,7 +34,6 @@ const tabs: Tab[] = [
 ]
 
 const activeTab = ref<string>("hero")
-const { setupSmoothMotion } = useSmoothMotion()
 
 let sectionObserver: IntersectionObserver | null = null
 
@@ -44,8 +42,6 @@ const scrollToSection = (sectionId: string) => {
 }
 
 onMounted(() => {
-  setupSmoothMotion()
-
   // Met à jour l'onglet actif selon la section au milieu de l'écran
   sectionObserver = new IntersectionObserver(
     (entries) => {

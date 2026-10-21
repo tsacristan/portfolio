@@ -63,30 +63,10 @@ export interface Competences {
   evidenceExample: EvidenceExample
 }
 
-export interface PowerliftingLift {
-  label: string
-  value: string
-  unit: string
-  icon: string
-  colorClass: string
-}
-
-export interface TrailRun {
-  name: string
-  dist: string
-  status: string
-  elevation: string
-  location: string
-  pace: string
-  duration: string
-}
-
 export interface SportData {
   // Liens publics vers les profils (laisser vide pour masquer le bouton)
   stravaUrl: string
   hevyUrl: string
-  powerlifting: PowerliftingLift[]
-  trail: TrailRun
 }
 
 export interface AppData {
