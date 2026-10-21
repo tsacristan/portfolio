@@ -16,9 +16,13 @@ export interface Project {
   desc: string
   longDesc: string
   impact: string
-  status: string
   github: string
   image: string
+  // Contexte affiché en badges (laisser vide pour masquer)
+  context?: string
+  team?: string
+  year?: string
+  myRole?: string
   competencies?: ProjectCompetency[]
 }
 
@@ -27,12 +31,6 @@ export interface ProjectCompetency {
   level: number
   role: string[]
   deliverables: string[]
-}
-
-export interface Skill {
-  icon: string
-  label: string
-  val: string
 }
 
 export interface Competence {
@@ -84,14 +82,9 @@ export interface TrailRun {
 }
 
 export interface SportData {
-  images: {
-    powerlifting: string
-    powerliftingAlt: string
-    squatCompetition: string
-    benchCompetition: string
-    deadliftCompetition: string
-    runningFallback: string
-  }
+  // Liens publics vers les profils (laisser vide pour masquer le bouton)
+  stravaUrl: string
+  hevyUrl: string
   powerlifting: PowerliftingLift[]
   trail: TrailRun
 }
@@ -100,7 +93,6 @@ export interface AppData {
   profile: Profile
   techStack: string[]
   projects: Project[]
-  skills: Skill[]
   competences: Competences
   sport: SportData
 }

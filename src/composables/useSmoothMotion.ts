@@ -1,44 +1,27 @@
-import { onMounted, ref } from "vue"
-
+// Fait apparaître les éléments [data-reveal] quand ils entrent dans l'écran
 export function useSmoothMotion() {
   let revealObserver: IntersectionObserver | null = null
 
   const setupSmoothMotion = () => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+    const targets = document.querySelectorAll("[data-reveal]")
 
-    if (!revealObserver) {
-      revealObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return
-            entry.target.classList.add("revealed")
-            revealObserver?.unobserve(entry.target)
-          })
-        },
-        { threshold: 0.16, rootMargin: "0px 0px -40px 0px" }
-      )
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      targets.forEach((target) => target.classList.add("revealed"))
+      return
     }
 
-    const panelSelectors = [
-      ".section",
-      ".project-preview",
-      ".long-project-card",
-      ".skill-card",
-      ".power-pr-card",
-      ".run-track-card"
-    ]
-    const targets = document.querySelectorAll(panelSelectors.join(", "))
+    revealObserver ??= new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add("revealed")
+          revealObserver?.unobserve(entry.target)
+        })
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    )
 
-    targets.forEach((target, index) => {
-      if (!target.classList.contains("reveal-ready")) {
-        target.classList.add("reveal-ready")
-        ;(target as HTMLElement).style.setProperty(
-          "--reveal-delay",
-          `${Math.min(index * 38, 320)}ms`
-        )
-      }
-      revealObserver?.observe(target)
-    })
+    targets.forEach((target) => revealObserver?.observe(target))
   }
 
   return { setupSmoothMotion }

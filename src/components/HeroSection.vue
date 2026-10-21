@@ -1,428 +1,260 @@
 <template>
-  <div class="hero-section">
-    <div class="container">
-      <!-- Animated Background -->
-      <div class="hero-gradient"></div>
-      <div class="hero-blur-1"></div>
-      <div class="hero-blur-2"></div>
-
-      <!-- Main Content -->
-      <div class="hero-content">
-        <!-- Titre principal spacieux -->
-        <h1 class="hero-title">
-          <span class="title-word" v-for="(word, i) in titleWords" :key="i" :style="{ '--word-index': i }">
-            {{ word }}
-          </span>
-        </h1>
-
-        <!-- Sous-titre épuré avec espacement -->
-        <p class="hero-subtitle">
-          Développeur Frontend & Athlète Hybride
-          <span class="subtitle-secondary">Créer des expériences numériques belles et performantes</span>
+  <section class="hero">
+    <div class="page hero-grid">
+      <div class="hero-main">
+        <p class="meta hero-kicker">
+          <span class="kicker-dot" aria-hidden="true"></span>
+          Portfolio · BUT Informatique
         </p>
 
-        <!-- CTA Buttons avec hover effects -->
-        <div class="hero-cta">
-          <button class="btn-primary" @click="scrollTo('projects')">
-            Découvrez mes projets
+        <h1 class="hero-name">
+          <span v-for="word in nameWords" :key="word">{{ word }}</span>
+        </h1>
+
+        <p class="hero-lead">
+          Je développe des applications web et mobiles, et je construis mon parcours vers la
+          <mark>cybersécurité</mark> : systèmes, réseaux et sécurité applicative.
+        </p>
+
+        <div class="hero-actions">
+          <button type="button" class="btn btn-signal" @click="emit('navigate', 'projects')">
+            Voir les projets <span aria-hidden="true">↓</span>
           </button>
+          <a class="btn" :href="profile.cv" target="_blank" rel="noreferrer">
+            CV (PDF) <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </div>
 
-      <!-- Floating stats -->
-      <div class="hero-stats">
-        <div class="stat-item" v-for="stat in stats" :key="stat.label">
-          <div class="stat-number">{{ stat.value }}</div>
-          <div class="stat-label">{{ stat.label }}</div>
+      <aside class="id-card" aria-label="Fiche d'identification">
+        <header class="id-card-head">
+          <span class="meta">Fiche d'identification</span>
+          <span class="tag tag-signal">Public</span>
+        </header>
+        <dl class="id-list">
+          <div v-for="row in idRows" :key="row.label" class="id-row">
+            <dt class="meta">{{ row.label }}</dt>
+            <dd>{{ row.value }}</dd>
+          </div>
+        </dl>
+        <div class="id-stats">
+          <div v-for="stat in stats" :key="stat.label" class="id-stat">
+            <span class="id-stat-value">{{ stat.value }}</span>
+            <span class="meta">{{ stat.label }}</span>
+          </div>
         </div>
-      </div>
+      </aside>
+    </div>
 
-      <!-- Scroll indicator -->
-      <div class="scroll-indicator">
-        <div class="scroll-dot"></div>
+    <div class="stack-strip" aria-label="Technologies utilisées">
+      <div class="page stack-inner">
+        <span class="meta stack-label">Stack</span>
+        <ul class="stack-list">
+          <li v-for="tech in techStack" :key="tech">{{ tech }}</li>
+        </ul>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
 import type { Profile } from "@/types"
+import { appData } from "@/utils/data"
 
 interface Props {
   profile: Profile
+  techStack: string[]
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const emit = defineEmits<{ (e: "navigate", sectionId: string): void }>()
 
-const titleWords = ["Thurian", "Sacristan"]
+const nameWords = props.profile.name.split(" ")
 
-const stats = [
-  { value: "3+", label: "Projets" },
-  { value: "6", label: "Compétences" },
-  { value: "2026", label: "Graduation" },
-  { value: "100%", label: "Passion" }
+const idRows = [
+  { label: "Formation", value: props.profile.role },
+  { label: "Profil", value: props.profile.tagline },
+  { label: "Cap", value: "Cybersécurité" },
+  { label: "Localisation", value: props.profile.location }
 ]
 
-const scrollTo = (section: string) => {
-  const element = document.querySelector(`[data-section="${section}"]`)
-  if (element) {
-    element.scrollIntoView({ behavior: "smooth" })
-  }
-}
-
-onMounted(() => {
-  // Premium minimal animations on load
-})
+// Chiffres calculés depuis les données pour rester cohérents avec le reste du site
+const stats = [
+  { value: String(appData.projects.length).padStart(2, "0"), label: "Projets" },
+  { value: String(appData.competences.items.length).padStart(2, "0"), label: "Compétences" },
+  { value: String(props.techStack.length).padStart(2, "0"), label: "Technos" }
+]
 </script>
 
 <style scoped>
-.hero-section {
-  position: relative;
-  width: 100%;
+.hero {
+  padding-top: calc(var(--header-h) + 5rem);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr);
+  gap: 4rem;
+  align-items: end;
+  padding-bottom: 5rem;
+}
+
+.hero-kicker {
   display: flex;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  padding: 4rem 0;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+  color: var(--paper-dim);
 }
 
-.container {
-  position: relative;
-  width: 100%;
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  z-index: 2;
+.kicker-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--signal);
 }
 
-/* Animated Backgrounds - Dark Theme Minimal */
-.hero-gradient {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #0a0a0a;
-  z-index: -2;
-  pointer-events: none;
-}
-
-.hero-blur-1 {
-  position: fixed;
-  top: -10%;
-  left: -10%;
-  width: 700px;
-  height: 700px;
-  background: radial-gradient(circle, rgba(255, 107, 74, 0.1), transparent 70%);
-  border-radius: 50%;
-  filter: blur(120px);
-  animation: float-slow 20s ease-in-out infinite;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.hero-blur-2 {
-  position: fixed;
-  bottom: -10%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(255, 107, 74, 0.05), transparent 70%);
-  border-radius: 50%;
-  filter: blur(120px);
-  animation: float-slow 25s ease-in-out infinite reverse;
-  z-index: -1;
-  pointer-events: none;
-}
-
-@keyframes float-slow {
-  0%, 100% {
-    transform: translateY(0px) translateX(0px);
-  }
-  50% {
-    transform: translateY(-50px) translateX(30px);
-  }
-}
-
-/* Hero Content */
-.hero-content {
-  text-align: center;
-  animation: fade-in-up 1s ease-out;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.hero-line {
-  display: none;
-}
-
-@keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.line-accent {
-  color: var(--indigo);
-}
-
-/* Hero Title - Ultra Minimal & Spacious */
-.hero-title {
-  font-size: clamp(3.5rem, 14vw, 8rem);
-  font-weight: 800;
-  line-height: 1.05;
-  margin: 0 0 3rem 0;
-  letter-spacing: 0.12em;
-  color: var(--text);
-  animation: fade-in-up 0.8s ease-out;
-  word-spacing: 2rem;
-}
-
-.title-word {
-  display: inline-block;
-  animation: word-reveal 0.8s ease-out forwards;
-  animation-delay: calc(var(--word-index) * 0.2s);
-  opacity: 0;
-  margin-right: 0;
-
-  &:not(:last-child) {
-    margin-right: 0.5em;
-  }
-}
-
-@keyframes word-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes gradient-shift-modern {
-  0%, 100% {
-    background-position: 0% center;
-  }
-  50% {
-    background-position: 100% center;
-  }
-}
-
-.title-word {
-  display: inline-block;
-  animation: word-reveal 0.8s ease-out forwards;
-  animation-delay: calc(var(--word-index) * 0.15s);
-  opacity: 0;
-
-  &:not(:last-child) {
-    margin-right: 0.3em;
-  }
-}
-
-@keyframes word-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(30px) rotateX(90deg);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) rotateX(0);
-  }
-}
-
-/* Hero Subtitle */
-.hero-subtitle {
-  font-size: 1.3rem;
-  color: var(--text);
-  margin: 0 0 5rem 0;
-  animation: fade-in-up 1s ease-out 0.2s both;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  line-height: 1.7;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.subtitle-secondary {
-  display: block;
-  color: var(--muted);
-  font-size: 1.1rem;
-  margin-top: 1rem;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-}
-
-/* CTA Buttons - Dark Theme Minimal */
-.hero-cta {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  margin-bottom: 10rem;
-  animation: fade-in-up 1s ease-out 0.4s both;
-  flex-wrap: wrap;
-}
-
-.btn-primary,
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1.2rem 0;
-  border: none;
-  font-weight: 400;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  font-size: 1.05rem;
-  position: relative;
-  overflow: hidden;
-  background: transparent;
-  color: var(--text);
-  letter-spacing: 0.08em;
-  border-bottom: 2px solid var(--text);
-}
-
-.btn-primary {
-  border-bottom-color: var(--neon-cyan);
-  color: var(--neon-cyan);
-  animation: fade-in-up 1s ease-out 0.5s both;
-
-  &:hover {
-    opacity: 0.7;
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-    opacity: 0.5;
-  }
-}
-
-.btn-secondary {
-  display: none;
-}
-
-.arrow-icon {
-  transition: transform 0.3s ease;
-}
-
-.btn-secondary:hover .arrow-icon {
-  transform: translate(3px, -3px);
-}
-
-/* Hero Stats - Hidden in Minimal Design */
-.hero-stats {
-  display: none;
-}
-
-.stat-item {
-  text-align: center;
-  animation: scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.stat-item:nth-child(1) { animation-delay: 1.2s; }
-.stat-item:nth-child(2) { animation-delay: 1.4s; }
-.stat-item:nth-child(3) { animation-delay: 1.6s; }
-.stat-item:nth-child(4) { animation-delay: 1.8s; }
-
-.stat-number {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.stat-label {
-  font-size: 0.8rem;
-  color: var(--muted);
-  margin-top: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 500;
-}
-
-/* Scroll Indicator - Animated Minimal */
-.scroll-indicator {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: fade-in 1s ease-out 2s both;
+.hero-name {
   display: flex;
   flex-direction: column;
+  font-size: clamp(3.4rem, 9vw, 7.5rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+}
+
+.hero-name span:last-child {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--paper);
+}
+
+.hero-lead {
+  max-width: 52ch;
+  margin-top: 2rem;
+  font-size: 1.15rem;
+  color: var(--paper-dim);
+}
+
+.hero-lead mark {
+  background: none;
+  color: var(--paper);
+  box-shadow: inset 0 -0.4em 0 rgba(255, 176, 32, 0.35);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+}
+
+/* Fiche d'identification */
+.id-card {
+  border: 1px solid var(--rule-strong);
+  background: var(--ink-2);
+}
+
+.id-card-head {
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  padding: 0.9rem 1.2rem;
+  border-bottom: 1px solid var(--rule);
 }
 
-.scroll-indicator::before {
-  content: "Scroll";
-  font-size: 0.8rem;
-  color: var(--muted);
-  letter-spacing: 0.1em;
-  font-weight: 400;
+.id-list {
+  margin: 0;
+  padding: 0.4rem 1.2rem;
 }
 
-.scroll-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--neon-cyan);
-  border-radius: 50%;
-  animation: bounce 2s ease-in-out infinite;
-  box-shadow: 0 0 8px rgba(255, 107, 74, 0.4);
+.id-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed var(--rule);
 }
 
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  50% {
-    transform: translateY(10px);
-    opacity: 0.5;
-  }
+.id-row:last-child {
+  border-bottom: none;
 }
 
-@media (max-width: 768px) {
-  .hero-section {
-    padding: 2rem 0;
-  }
-
-  .hero-title {
-    text-align: center;
-  }
-
-  .hero-cta {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .hero-stats {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-  }
+.id-row dt {
+  padding-top: 0.15rem;
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
+.id-row dd {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.id-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--rule);
+}
+
+.id-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem 1.2rem;
+}
+
+.id-stat + .id-stat {
+  border-left: 1px solid var(--rule);
+}
+
+.id-stat-value {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--signal);
+  line-height: 1;
+}
+
+/* Bandeau stack */
+.stack-strip {
+  border-top: 1px solid var(--rule);
+  background: var(--ink-2);
+}
+
+.stack-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.1rem 0;
+}
+
+.stack-label {
+  flex-shrink: 0;
+  color: var(--signal);
+}
+
+.stack-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--paper-dim);
+}
+
+@media (max-width: 900px) {
+  .hero {
+    padding-top: calc(var(--header-h) + 3rem);
   }
-  to {
-    opacity: 1;
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .stack-inner {
+    align-items: flex-start;
   }
 }
 </style>

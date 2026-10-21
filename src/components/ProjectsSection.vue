@@ -1,211 +1,350 @@
 <template>
-  <section class="section reveal-ready">
-    <h2>Mes Projets</h2>
-    <div class="projects-grid">
-      <article v-for="project in projects" :key="project.id" class="project-card reveal-ready">
-        <img :src="project.image" :alt="project.title" class="project-image" />
-        <div class="project-content">
-          <div class="project-header">
-            <span class="project-id">{{ project.id }}</span>
-            <h3 class="project-title">{{ project.title }}</h3>
-          </div>
-          <p class="project-tech">{{ project.tech }}</p>
-          <p class="project-desc">{{ project.desc }}</p>
-          <a :href="project.github" target="_blank" rel="noreferrer" class="project-link">
-            Voir le projet →
-          </a>
+  <section class="chapter">
+    <div class="page">
+      <header class="chapter-head" data-reveal>
+        <span class="chapter-index">§02 — Registre</span>
+        <div>
+          <h2 class="chapter-title">Projets</h2>
+          <p class="chapter-lead">
+            {{ projects.length }} projets, du jeu en Java à l'application fullstack. Ouvrez une ligne pour voir le
+            contexte, mon rôle et les compétences mobilisées.
+          </p>
         </div>
-      </article>
+      </header>
+
+      <div class="register" role="list">
+        <div class="register-head meta" aria-hidden="true">
+          <span>Réf.</span>
+          <span>Projet</span>
+          <span>Stack</span>
+          <span>Compétences</span>
+          <span></span>
+        </div>
+
+        <article
+          v-for="project in projects"
+          :key="project.id"
+          :class="['entry', { open: openId === project.id }]"
+          role="listitem"
+          data-reveal
+        >
+          <button
+            type="button"
+            class="entry-row"
+            :aria-expanded="openId === project.id"
+            :aria-controls="`project-${project.id}`"
+            @click="toggle(project.id)"
+          >
+            <span class="entry-ref">P-{{ project.id }}</span>
+            <span class="entry-title">
+              <strong>{{ project.title }}</strong>
+              <span class="entry-desc">{{ project.desc }}</span>
+            </span>
+            <span class="entry-stack">{{ project.tech }}</span>
+            <span class="entry-comps">
+              <span v-for="comp in project.competencies" :key="comp.code" class="tag">{{ comp.code }}</span>
+            </span>
+            <span class="entry-toggle" aria-hidden="true">{{ openId === project.id ? "−" : "+" }}</span>
+          </button>
+
+          <div
+            v-if="openId === project.id"
+            :id="`project-${project.id}`"
+            :class="['entry-detail', { 'has-figure': project.image }]"
+          >
+            <figure v-if="project.image" class="entry-figure">
+              <img :src="project.image" :alt="`Capture d'écran de ${project.title}`" loading="lazy" />
+            </figure>
+
+            <div class="entry-body">
+              <ul v-if="contextChips(project).length" class="entry-context">
+                <li v-for="chip in contextChips(project)" :key="chip" class="tag">{{ chip }}</li>
+              </ul>
+
+              <p class="entry-long">{{ project.longDesc }}</p>
+
+              <dl class="entry-facts">
+                <div v-if="project.myRole">
+                  <dt class="meta">Mon rôle</dt>
+                  <dd>{{ project.myRole }}</dd>
+                </div>
+                <div>
+                  <dt class="meta">Ce que j'en retiens</dt>
+                  <dd>{{ project.impact }}</dd>
+                </div>
+              </dl>
+
+              <ul class="entry-evidence">
+                <li v-for="comp in project.competencies" :key="comp.code">
+                  <span class="evidence-code">{{ comp.code }}</span>
+                  <span class="evidence-name">{{ competenceTitle(comp.code) }}</span>
+                  <span class="evidence-level" :aria-label="`Niveau ${comp.level} sur 4`">
+                    <i v-for="n in 4" :key="n" :class="{ on: n <= comp.level }"></i>
+                  </span>
+                  <span class="evidence-roles">{{ comp.role.join(" · ") }}</span>
+                </li>
+              </ul>
+
+              <a :href="project.github" target="_blank" rel="noreferrer" class="btn entry-link">
+                Code source <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import type { Project } from "@/types"
+import { ref } from "vue"
+import type { Project, Competences } from "@/types"
 
 interface Props {
   projects: Project[]
+  competences: Competences
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+// Le projet le plus complet (le dernier) est ouvert par défaut
+const openId = ref<string | null>(props.projects[props.projects.length - 1]?.id ?? null)
+
+const toggle = (id: string) => {
+  openId.value = openId.value === id ? null : id
+}
+
+const contextChips = (project: Project) =>
+  [project.context, project.team, project.year].filter((chip): chip is string => Boolean(chip))
+
+const competenceTitle = (code: string) => props.competences.items.find((c) => c.code === code)?.title ?? ""
 </script>
 
 <style scoped>
-.section {
-  width: 100%;
-  padding: 6rem 2rem;
-  background: #0a0a0a;
+.register {
+  border-top: 1px solid var(--rule-strong);
 }
 
-.section h2 {
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
-  margin: 0 0 3rem 0;
-  font-weight: 700;
-  background: linear-gradient(135deg, #ffffff 0%, #ff6b4a 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-align: center;
-  animation: fade-in-up 0.8s ease-out;
-}
-
-.projects-grid {
+.register-head,
+.entry-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.project-card {
-  border: 1.5px solid rgba(255, 107, 74, 0.25);
-  border-radius: 2rem;
-  overflow: hidden;
-  background: linear-gradient(135deg, rgba(255, 107, 74, 0.08) 0%, rgba(255, 107, 74, 0.02) 100%);
-  backdrop-filter: blur(10px);
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.project-card:hover {
-  border-color: rgba(255, 107, 74, 0.6);
-  background: linear-gradient(135deg, rgba(255, 107, 74, 0.15) 0%, rgba(255, 107, 74, 0.05) 100%);
-  transform: translateY(-12px);
-  box-shadow: 0 30px 70px rgba(255, 107, 74, 0.25), 0 0 50px rgba(255, 107, 74, 0.1);
-}
-
-.project-image {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  transition: all 0.35s ease;
-  filter: brightness(0.95);
-}
-
-.project-card:hover .project-image {
-  filter: brightness(1.1) contrast(1.1);
-}
-
-.project-content {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.project-header {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-}
-
-.project-id {
-  display: inline-block;
-  min-width: 2.5rem;
-  padding: 0.5rem 0.75rem;
-  background: linear-gradient(135deg, rgba(255, 107, 74, 0.2) 0%, rgba(255, 107, 74, 0.1) 100%);
-  border: 1.5px solid rgba(255, 107, 74, 0.4);
-  border-radius: 0.75rem;
-  font-weight: 700;
-  font-size: 0.875rem;
-  color: #ff6b4a;
-  text-align: center;
-}
-
-.project-title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.project-tech {
-  margin: 0;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.project-desc {
-  margin: 0;
-  flex-grow: 1;
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.6;
-}
-
-.project-link {
-  display: inline-flex;
+  grid-template-columns: 80px minmax(0, 2.2fr) minmax(0, 1.2fr) 170px 32px;
+  gap: 1.5rem;
   align-items: center;
-  gap: 0.5rem;
-  color: #ff6b4a;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  width: fit-content;
-  position: relative;
 }
 
-.project-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: #ff6b4a;
-  transition: width 0.35s ease;
+.register-head {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rule);
 }
 
-.project-link:hover {
-  gap: 1rem;
-  color: #ff5533;
+.entry {
+  border-bottom: 1px solid var(--rule);
 }
 
-.project-link:hover::after {
+.entry-row {
   width: 100%;
+  padding: 1.4rem 0;
+  text-align: left;
+  transition: background-color 0.15s ease;
 }
 
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.entry-row:hover {
+  background: var(--ink-2);
 }
 
-@media (max-width: 768px) {
-  .section {
-    padding: 4rem 1.5rem;
+.entry-ref {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.entry.open .entry-ref {
+  color: var(--signal);
+}
+
+.entry-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.entry-title strong {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.entry-desc {
+  font-size: 0.9rem;
+  color: var(--paper-dim);
+}
+
+.entry-stack {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--paper-dim);
+}
+
+.entry-comps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.entry-toggle {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--rule-strong);
+  font-family: var(--font-mono);
+}
+
+.entry.open .entry-toggle {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--signal-ink);
+}
+
+/* Détail */
+.entry-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+  padding: 0.5rem 0 2.5rem 104px;
+}
+
+.entry-detail.has-figure {
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+.entry-figure {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--rule-strong);
+  background: var(--ink-2);
+  align-self: start;
+}
+
+.entry-figure img {
+  width: 100%;
+  height: auto;
+}
+
+.entry-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 760px;
+}
+
+.entry-context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.entry-long {
+  font-size: 1.02rem;
+}
+
+.entry-facts {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+
+.entry-facts dd {
+  margin: 0.3rem 0 0;
+  color: var(--paper-dim);
+}
+
+.entry-evidence {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.entry-evidence li {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  gap: 0.25rem 1rem;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.evidence-code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--signal);
+}
+
+.evidence-name {
+  font-size: 0.92rem;
+}
+
+.evidence-level {
+  display: flex;
+  gap: 3px;
+}
+
+.evidence-level i {
+  width: 14px;
+  height: 6px;
+  background: var(--rule-strong);
+}
+
+.evidence-level i.on {
+  background: var(--signal);
+}
+
+.evidence-roles {
+  grid-column: 2 / -1;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.entry-link {
+  align-self: flex-start;
+}
+
+@media (max-width: 900px) {
+  .register-head {
+    display: none;
   }
 
-  .projects-grid {
+  .entry-row {
+    grid-template-columns: 1fr 32px;
+    grid-template-areas:
+      "ref toggle"
+      "title title"
+      "stack stack"
+      "comps comps";
+    gap: 0.6rem;
+  }
+
+  .entry-ref { grid-area: ref; }
+  .entry-title { grid-area: title; }
+  .entry-stack { grid-area: stack; }
+  .entry-comps { grid-area: comps; }
+  .entry-toggle { grid-area: toggle; }
+
+  .entry-detail,
+  .entry-detail.has-figure {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 0 2rem;
   }
 
-  .section h2 {
-    font-size: 2rem;
-  }
-
-  .project-card {
-    border-radius: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .section {
-    padding: 3rem 1rem;
-  }
-
-  .project-content {
-    padding: 1.5rem;
-  }
-
-  .project-image {
-    height: 180px;
+  .entry-figure {
+    max-width: 200px;
   }
 }
 </style>

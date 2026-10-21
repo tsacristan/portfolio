@@ -1,39 +1,48 @@
 <template>
   <header class="topbar">
-    <nav class="container nav">
-      <button class="brand" @click="selectAndNavigate('hero')" type="button">
-        <span class="brand-icon">📡</span>
-        <span>{{ profile.name }}</span>
+    <nav class="page topbar-inner" aria-label="Navigation principale">
+      <button class="brand" type="button" @click="selectAndNavigate('hero')">
+        <span class="brand-mark">TS</span>
+        <span class="brand-name">{{ profile.name }}</span>
       </button>
 
-      <div class="desktop-nav">
-        <button
-          v-for="tab in tabs"
-          :key="tab.id"
-          :class="['nav-link', { active: activeTab === tab.id }]"
-          @click="selectAndNavigate(tab.id)"
-          type="button"
-        >
-          {{ tab.label }}
-        </button>
-      </div>
+      <ul class="nav-list">
+        <li v-for="(tab, i) in tabs" :key="tab.id">
+          <button
+            type="button"
+            :class="['nav-link', { active: activeTab === tab.id }]"
+            :aria-current="activeTab === tab.id ? 'true' : undefined"
+            @click="selectAndNavigate(tab.id)"
+          >
+            <span class="nav-index">§{{ String(i + 1).padStart(2, "0") }}</span>
+            {{ tab.label }}
+          </button>
+        </li>
+      </ul>
 
-      <button class="menu-btn" @click="toggleMenu" aria-label="Ouvrir le menu" type="button">
-        ☰
+      <button
+        class="menu-btn"
+        type="button"
+        :aria-expanded="mobileMenuOpen"
+        aria-controls="mobile-nav"
+        @click="mobileMenuOpen = !mobileMenuOpen"
+      >
+        {{ mobileMenuOpen ? "Fermer" : "Menu" }}
       </button>
     </nav>
 
-    <div v-if="mobileMenuOpen" class="mobile-nav">
-      <button
-        v-for="tab in tabs"
-        :key="tab.id"
-        :class="['nav-link mobile', { active: activeTab === tab.id }]"
-        @click="selectAndNavigate(tab.id)"
-        type="button"
-      >
-        {{ tab.label }}
-      </button>
-    </div>
+    <ul v-if="mobileMenuOpen" id="mobile-nav" class="mobile-nav">
+      <li v-for="(tab, i) in tabs" :key="tab.id">
+        <button
+          type="button"
+          :class="['mobile-link', { active: activeTab === tab.id }]"
+          @click="selectAndNavigate(tab.id)"
+        >
+          <span class="nav-index">§{{ String(i + 1).padStart(2, "0") }}</span>
+          {{ tab.label }}
+        </button>
+      </li>
+    </ul>
   </header>
 </template>
 
@@ -56,10 +65,6 @@ const emit = defineEmits<Emits>()
 
 const mobileMenuOpen = ref(false)
 
-const toggleMenu = () => {
-  mobileMenuOpen.value = !mobileMenuOpen.value
-}
-
 const selectAndNavigate = (tabId: string) => {
   mobileMenuOpen.value = false
   emit("navigate", tabId)
@@ -69,119 +74,117 @@ const selectAndNavigate = (tabId: string) => {
 <style scoped>
 .topbar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset: 0 0 auto 0;
   z-index: 50;
-  background: rgba(10, 10, 10, 0.98);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  background: rgba(14, 16, 19, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
 }
 
-.nav {
-  min-height: 80px;
+.topbar-inner {
+  height: var(--header-h);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1.5rem;
 }
 
 .brand {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.7rem;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  font-size: 0.875rem;
+  gap: 0.75rem;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--signal);
+  font-family: var(--font-display);
   font-weight: 700;
-  padding: 0.5rem 1rem;
-  border-radius: 0.75rem;
-  color: var(--text);
-  transition: all 0.28s ease;
+  font-size: 0.85rem;
 }
 
-.brand:hover {
-  background: rgba(255, 107, 74, 0.1);
-  color: var(--neon-cyan);
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 600;
 }
 
-.brand-icon {
+.nav-list {
   display: flex;
-  color: var(--indigo);
-}
-
-.desktop-nav {
-  display: flex;
-  gap: 0.5rem;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-link {
-  background: none;
-  border: 0;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  border-radius: 0.75rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
   font-size: 0.9rem;
-  transition: all 0.28s ease;
-  color: var(--muted);
-  font-weight: 400;
-  letter-spacing: 0.06em;
+  color: var(--paper-dim);
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .nav-link:hover {
-  color: var(--text);
-  background: transparent;
+  color: var(--paper);
 }
 
 .nav-link.active {
-  color: var(--neon-cyan);
-  background: transparent;
-  border-bottom: 2px solid var(--neon-cyan);
+  color: var(--paper);
+  border-bottom-color: var(--signal);
+}
+
+.nav-index {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.nav-link.active .nav-index,
+.mobile-link.active .nav-index {
+  color: var(--signal);
 }
 
 .menu-btn {
   display: none;
-  background: none;
-  border: 0;
-  cursor: pointer;
-  padding: 0.5rem;
-  color: var(--text);
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--rule-strong);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .mobile-nav {
-  display: none;
-  flex-direction: column;
-  gap: 0;
-  border-top: 1px solid var(--line);
-  background: rgba(245, 245, 247, 0.95);
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0 1rem;
+  border-top: 1px solid var(--rule);
 }
 
-.nav-link.mobile {
-  border-radius: 0;
-  border-left: 3px solid transparent;
-  padding: 1rem 1.5rem;
+.mobile-link {
+  display: flex;
+  gap: 0.75rem;
+  width: var(--page);
+  margin: 0 auto;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 1.05rem;
   text-align: left;
 }
 
-.nav-link.mobile.active {
-  border-left-color: var(--indigo);
-  background: rgba(99, 102, 241, 0.08);
-  border-bottom: none;
-}
-
-@media (max-width: 768px) {
-  .desktop-nav {
+@media (max-width: 900px) {
+  .nav-list {
     display: none;
   }
 
   .menu-btn {
-    display: flex;
-    align-items: center;
-  }
-
-  .mobile-nav {
-    display: flex;
+    display: block;
   }
 }
 </style>
