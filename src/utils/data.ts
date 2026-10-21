@@ -44,6 +44,8 @@ export const appData: AppData = {
       impact: "Architecture modulaire et réutilisable pour d'autres jeux de plateau.",
       github: "https://github.com/tsacristan/latice",
       image: "",
+      team: "Équipe de 3",
+      year: "2025",
       competencies: [
         {
           code: "C1",
@@ -71,6 +73,9 @@ export const appData: AppData = {
       impact: "Développement mobile natif et mise en pratique d'une architecture en couches.",
       github: "https://github.com/tsacristan/PisTask",
       image: "",
+      context: "Projet étudiant",
+      team: "Binôme",
+      year: "2026",
       competencies: [
         {
           code: "C1",
@@ -98,6 +103,8 @@ export const appData: AppData = {
       impact: "Maîtrise du JavaScript côté client et de l'intégration d'une interface complexe.",
       github: "https://github.com/tsacristan/netflix-project",
       image: "",
+      team: "Solo",
+      year: "2026",
       competencies: [
         {
           code: "C1",
@@ -119,6 +126,8 @@ export const appData: AppData = {
       impact: "Découverte du développement multiplateforme avec un codebase unique.",
       github: "https://github.com/RomanJ07/RomanThurianApp",
       image: "",
+      team: "Binôme",
+      year: "2026",
       competencies: [
         {
           code: "C1",
@@ -146,6 +155,8 @@ export const appData: AppData = {
       impact: "Architecture fullstack typée de bout en bout, avec validation des données côté serveur.",
       github: "https://github.com/Lamazaii/vytre",
       image: asset("images/vytre.png"),
+      team: "Équipe de 5",
+      year: "2025 – 2026",
       competencies: [
         {
           code: "C1",

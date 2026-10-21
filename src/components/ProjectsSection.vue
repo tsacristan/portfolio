@@ -179,8 +179,9 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// Le projet le plus complet (le dernier) est ouvert par défaut
-const openId = ref<string | null>(props.projects[props.projects.length - 1]?.id ?? null)
+// Le projet qui mobilise le plus de compétences est ouvert par défaut
+const richest = [...props.projects].sort((a, b) => (b.competencies?.length ?? 0) - (a.competencies?.length ?? 0))[0]
+const openId = ref<string | null>(richest?.id ?? null)
 
 const toggle = (id: string) => {
   openId.value = openId.value === id ? null : id
