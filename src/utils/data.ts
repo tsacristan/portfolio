@@ -37,7 +37,7 @@ export const appData: AppData = {
       title: "Vytre",
       featured: true,
       type: "Application web",
-      languages: ["TypeScript"],
+      languages: ["TypeScript", "Vue", "SQL", "HTML / CSS"],
       tech: "Vue 3 / Express / Prisma / TypeScript",
       desc: "Éditeur de procédures opérationnelles avec mode lecteur, drag & drop et gestion multimédia.",
       longDesc:
@@ -78,7 +78,7 @@ export const appData: AppData = {
       id: "02",
       title: "Crok",
       type: "Application mobile",
-      languages: ["TypeScript"],
+      languages: ["TypeScript", "SQL"],
       tech: "React Native / Expo / SQLite",
       desc: "Application de suivi nutritionnel : journal des repas, scan de codes-barres et suivi du poids.",
       longDesc:
@@ -174,7 +174,7 @@ export const appData: AppData = {
       id: "05",
       title: "Netflix Clone",
       type: "Site web",
-      languages: ["JavaScript", "HTML / CSS"],
+      languages: ["JavaScript", "TypeScript", "HTML / CSS"],
       tech: "JavaScript / Frontend",
       desc: "Reproduction de l'interface Netflix avec navigation et contenu dynamique.",
       longDesc:
