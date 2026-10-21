@@ -8,12 +8,14 @@
         </p>
 
         <h1 class="hero-name">
-          <span v-for="word in nameWords" :key="word">{{ word }}</span>
+          <span v-for="(word, i) in nameWords" :key="word" class="name-line" :style="{ '--i': i }">
+            <span class="name-word">{{ word }}</span>
+          </span>
         </h1>
 
         <p class="hero-lead">
           Je développe des applications web et mobiles, et je construis mon parcours vers la
-          <mark>cybersécurité</mark> : systèmes, réseaux et sécurité applicative.
+          <mark class="redact">cybersécurité</mark> : systèmes, réseaux et sécurité applicative.
         </p>
 
         <div class="hero-actions">
@@ -26,7 +28,7 @@
         </div>
       </div>
 
-      <aside class="id-card" aria-label="Fiche d'identification">
+      <aside class="id-card corners" aria-label="Fiche d'identification">
         <header class="id-card-head">
           <span class="meta">Fiche d'identification</span>
           <span class="tag tag-signal">Public</span>
@@ -43,13 +45,20 @@
             <span class="meta">{{ stat.label }}</span>
           </div>
         </div>
+        <footer class="id-card-foot">
+          <span class="barcode" aria-hidden="true"></span>
+          <span class="meta">Réf. TS-BUT-INFO</span>
+        </footer>
       </aside>
     </div>
 
     <div class="stack-strip" aria-label="Technologies utilisées">
-      <div class="page stack-inner">
-        <span class="meta stack-label">Stack</span>
-        <ul class="stack-list">
+      <span class="meta stack-label">Stack</span>
+      <div class="marquee">
+        <ul class="marquee-track">
+          <li v-for="tech in techStack" :key="tech">{{ tech }}</li>
+        </ul>
+        <ul class="marquee-track" aria-hidden="true">
           <li v-for="tech in techStack" :key="tech">{{ tech }}</li>
         </ul>
       </div>
@@ -88,7 +97,27 @@ const stats = [
 
 <style scoped>
 .hero {
+  position: relative;
   padding-top: calc(var(--header-h) + 5rem);
+  overflow: hidden;
+}
+
+/* Halo ambré très discret derrière le nom */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 70vw;
+  height: 70vw;
+  max-width: 900px;
+  max-height: 900px;
+  background: radial-gradient(circle, rgba(255, 176, 32, 0.08), transparent 62%);
+  pointer-events: none;
+}
+
+.hero-grid {
+  position: relative;
 }
 
 .hero-grid {
@@ -122,9 +151,37 @@ const stats = [
   letter-spacing: -0.045em;
 }
 
-.hero-name span:last-child {
+/* Chaque ligne du nom monte depuis un masque */
+.name-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.name-word {
+  display: inline-block;
+  animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(0.1s + var(--i) * 0.12s);
+}
+
+.name-line:last-child .name-word {
   color: transparent;
   -webkit-text-stroke: 1.5px var(--paper);
+  transition: color 0.3s ease;
+}
+
+.name-line:last-child:hover .name-word {
+  color: var(--signal);
+  -webkit-text-stroke-color: var(--signal);
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: none;
+  }
 }
 
 .hero-lead {
@@ -132,12 +189,45 @@ const stats = [
   margin-top: 2rem;
   font-size: 1.15rem;
   color: var(--paper-dim);
+  animation: fade 0.8s ease 0.4s both;
 }
 
-.hero-lead mark {
+/* Mot caviardé qui se dévoile */
+.redact {
+  position: relative;
   background: none;
   color: var(--paper);
-  box-shadow: inset 0 -0.4em 0 rgba(255, 176, 32, 0.35);
+  white-space: nowrap;
+  box-shadow: inset 0 -0.38em 0 rgba(255, 176, 32, 0.3);
+}
+
+.redact::after {
+  content: "";
+  position: absolute;
+  inset: -0.05em -0.15em;
+  background: var(--paper);
+  transform-origin: right;
+  animation: unredact 0.6s cubic-bezier(0.7, 0, 0.3, 1) 1.1s both;
+}
+
+@keyframes unredact {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .hero-actions {
@@ -145,12 +235,39 @@ const stats = [
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 2.5rem;
+  animation: fade 0.8s ease 0.55s both;
 }
 
 /* Fiche d'identification */
 .id-card {
   border: 1px solid var(--rule-strong);
-  background: var(--ink-2);
+  background: rgba(20, 23, 28, 0.85);
+  backdrop-filter: blur(6px);
+  animation: fade 0.8s ease 0.3s both;
+}
+
+.id-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.barcode {
+  width: 120px;
+  height: 22px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--paper-dim) 0 1px,
+    transparent 1px 3px,
+    var(--paper-dim) 3px 5px,
+    transparent 5px 6px,
+    var(--paper-dim) 6px 7px,
+    transparent 7px 10px
+  );
+  opacity: 0.55;
 }
 
 .id-card-head {
@@ -212,34 +329,64 @@ const stats = [
   line-height: 1;
 }
 
-/* Bandeau stack */
+/* Bandeau stack qui défile */
 .stack-strip {
+  position: relative;
+  display: flex;
+  align-items: center;
   border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
   background: var(--ink-2);
 }
 
-.stack-inner {
+.stack-label {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  align-self: stretch;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1.1rem 0;
+  padding: 0 1.25rem;
+  background: var(--signal);
+  color: var(--signal-ink);
+  font-weight: 600;
 }
 
-.stack-label {
+.marquee {
+  display: flex;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.marquee-track {
+  display: flex;
   flex-shrink: 0;
+  gap: 2.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 1.1rem 1.25rem 1.1rem 2.5rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--paper-dim);
+  white-space: nowrap;
+  animation: marquee 32s linear infinite;
+}
+
+.marquee-track li::after {
+  content: "/";
+  margin-left: 2.5rem;
   color: var(--signal);
 }
 
-.stack-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1.4rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--paper-dim);
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 @media (max-width: 900px) {
@@ -253,8 +400,8 @@ const stats = [
     padding-bottom: 3.5rem;
   }
 
-  .stack-inner {
-    align-items: flex-start;
+  .marquee-track {
+    font-size: 1rem;
   }
 }
 </style>

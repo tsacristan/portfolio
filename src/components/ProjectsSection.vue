@@ -1,5 +1,6 @@
 <template>
   <section class="chapter">
+    <span class="chapter-num" aria-hidden="true">02</span>
     <div class="page">
       <header class="chapter-head" data-reveal>
         <span class="chapter-index">§02 — Registre</span>
@@ -52,7 +53,7 @@
             :id="`project-${project.id}`"
             :class="['entry-detail', { 'has-figure': project.image }]"
           >
-            <figure v-if="project.image" class="entry-figure">
+            <figure v-if="project.image" class="entry-figure corners">
               <img :src="project.image" :alt="`Capture d'écran de ${project.title}`" loading="lazy" />
             </figure>
 
@@ -139,18 +140,51 @@ const competenceTitle = (code: string) => props.competences.items.find((c) => c.
 }
 
 .entry {
+  position: relative;
   border-bottom: 1px solid var(--rule);
+}
+
+/* Barre ambrée qui s'étire au survol / à l'ouverture */
+.entry::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1.25rem;
+  width: 3px;
+  background: var(--signal);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.entry:hover::before,
+.entry.open::before {
+  transform: scaleY(1);
+}
+
+.entry.open {
+  background: linear-gradient(90deg, rgba(255, 176, 32, 0.05), transparent 45%);
 }
 
 .entry-row {
   width: 100%;
   padding: 1.4rem 0;
   text-align: left;
-  transition: background-color 0.15s ease;
 }
 
-.entry-row:hover {
-  background: var(--ink-2);
+.entry-title strong {
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.entry-row:hover .entry-title strong {
+  transform: translateX(6px);
+  color: var(--signal);
+}
+
+.entry-row:hover .entry-toggle {
+  border-color: var(--signal);
+  color: var(--signal);
 }
 
 .entry-ref {
@@ -200,6 +234,7 @@ const competenceTitle = (code: string) => props.competences.items.find((c) => c.
   height: 32px;
   border: 1px solid var(--rule-strong);
   font-family: var(--font-mono);
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
 }
 
 .entry.open .entry-toggle {
@@ -214,6 +249,18 @@ const competenceTitle = (code: string) => props.competences.items.find((c) => c.
   grid-template-columns: minmax(0, 1fr);
   gap: 2.5rem;
   padding: 0.5rem 0 2.5rem 104px;
+  animation: detail-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes detail-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .entry-detail.has-figure {

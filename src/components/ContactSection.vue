@@ -1,5 +1,6 @@
 <template>
   <section class="chapter">
+    <span class="chapter-num" aria-hidden="true">05</span>
     <div class="page">
       <header class="chapter-head" data-reveal>
         <span class="chapter-index">§05 — Contact</span>
@@ -8,6 +9,13 @@
           <p class="chapter-lead">Stage, alternance ou projet : écrivez-moi.</p>
         </div>
       </header>
+
+      <div class="mail-hero" data-reveal>
+        <a :href="`mailto:${profile.email}`" class="mail-link">{{ profile.email }}</a>
+        <button type="button" class="copy-btn" @click="copyEmail">
+          {{ copied ? "Copié ✓" : "Copier" }}
+        </button>
+      </div>
 
       <div class="contact-grid">
         <ul class="channels" data-reveal>
@@ -47,7 +55,7 @@
           </li>
         </ul>
 
-        <form class="form" data-reveal @submit.prevent="submitForm">
+        <form class="form corners" data-reveal @submit.prevent="submitForm">
           <label class="field">
             <span class="meta">Nom</span>
             <input v-model="form.name" type="text" autocomplete="name" required />
@@ -83,6 +91,20 @@ interface Props {
 const props = defineProps<Props>()
 
 const githubHandle = computed(() => props.profile.github.split("/").filter(Boolean).pop())
+
+const copied = ref(false)
+
+const copyEmail = async () => {
+  try {
+    await navigator.clipboard.writeText(props.profile.email)
+    copied.value = true
+    setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  } catch {
+    window.location.href = `mailto:${props.profile.email}`
+  }
+}
 
 const form = ref({
   name: "",
@@ -133,6 +155,58 @@ const submitForm = async () => {
 </script>
 
 <style scoped>
+/* Adresse email en très grand, soulignement animé */
+.mail-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.mail-link {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 3.6rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.mail-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.08em;
+  height: 3px;
+  background: var(--signal);
+  transform: scaleX(0.18);
+  transform-origin: left;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.mail-link:hover::after {
+  transform: scaleX(1);
+}
+
+.copy-btn {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--rule-strong);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.copy-btn:hover {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+
 .contact-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

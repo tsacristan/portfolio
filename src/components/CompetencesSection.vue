@@ -1,5 +1,6 @@
 <template>
   <section class="chapter">
+    <span class="chapter-num" aria-hidden="true">03</span>
     <div class="page">
       <header class="chapter-head" data-reveal>
         <span class="chapter-index">§03 — Évaluation</span>
@@ -14,7 +15,7 @@
       </header>
 
       <div class="matrix">
-        <article v-for="item in competences.items" :key="item.code" class="cell" data-reveal>
+        <article v-for="item in competences.items" :key="item.code" class="cell corners" data-reveal>
           <header class="cell-head">
             <span class="cell-code">{{ item.code }}</span>
             <span class="meta">{{ levelTitle(item.level) }}</span>
@@ -97,7 +98,29 @@ const projectsFor = (code: string) =>
 }
 
 .cell:hover {
-  background: var(--ink-2);
+  background-color: var(--ink-2);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 9px,
+    rgba(236, 233, 226, 0.03) 9px 10px
+  );
+}
+
+/* Repères de coin visibles seulement au survol */
+.cell.corners::before,
+.cell.corners::after {
+  opacity: 0;
+  transition: opacity 0.2s ease, width 0.25s ease, height 0.25s ease;
+}
+
+.cell.corners:hover::before,
+.cell.corners:hover::after {
+  opacity: 1;
+}
+
+.cell:hover .cell-code {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--signal);
 }
 
 .cell-head {
@@ -112,6 +135,7 @@ const projectsFor = (code: string) =>
   font-weight: 700;
   line-height: 1;
   color: var(--signal);
+  transition: color 0.2s ease;
 }
 
 .cell-title {
@@ -140,6 +164,28 @@ const projectsFor = (code: string) =>
 .cell-level i.on,
 .legend-bar i.on {
   background: var(--signal);
+}
+
+/* Les segments se remplissent un à un au survol */
+.cell-level i.on {
+  transform-origin: left;
+}
+
+.cell:hover .cell-level i.on {
+  animation: fill 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.cell:hover .cell-level i.on:nth-child(2) { animation-delay: 0.06s; }
+.cell:hover .cell-level i.on:nth-child(3) { animation-delay: 0.12s; }
+.cell:hover .cell-level i.on:nth-child(4) { animation-delay: 0.18s; }
+
+@keyframes fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 .cell-level .meta {

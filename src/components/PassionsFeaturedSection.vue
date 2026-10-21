@@ -1,5 +1,6 @@
 <template>
   <section class="chapter">
+    <span class="chapter-num" aria-hidden="true">04</span>
     <div class="page">
       <header class="chapter-head" data-reveal>
         <span class="chapter-index">§04 — Hors écran</span>
@@ -18,7 +19,7 @@
           :href="sportData.stravaUrl || undefined"
           target="_blank"
           rel="noreferrer"
-          class="log"
+          class="log corners hatch"
           data-reveal
         >
           <header class="log-head">
@@ -26,6 +27,7 @@
             <img :src="logos.strava" alt="Strava" class="log-logo" width="44" height="44" />
           </header>
           <h3 class="log-title">Trail</h3>
+          <span class="log-mark" aria-hidden="true">RUN</span>
           <p class="log-text">Sorties longues et dénivelé, suivies sur Strava.</p>
           <span v-if="sportData.stravaUrl" class="log-link">Voir mon profil Strava <span aria-hidden="true">↗</span></span>
         </component>
@@ -35,7 +37,7 @@
           :href="sportData.hevyUrl || undefined"
           target="_blank"
           rel="noreferrer"
-          class="log"
+          class="log corners hatch"
           data-reveal
         >
           <header class="log-head">
@@ -43,6 +45,7 @@
             <img :src="logos.hevy" alt="Hevy" class="log-logo" width="44" height="44" />
           </header>
           <h3 class="log-title">Powerlifting</h3>
+          <span class="log-mark" aria-hidden="true">LIFT</span>
           <p class="log-text">Squat, bench et deadlift, séances suivies sur Hevy.</p>
           <span v-if="sportData.hevyUrl" class="log-link">Voir mon profil Hevy <span aria-hidden="true">↗</span></span>
         </component>
@@ -75,15 +78,48 @@ const logos = {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-height: 300px;
   padding: 2rem;
   border: 1px solid var(--rule-strong);
-  background: var(--ink-2);
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  background-color: var(--ink-2);
+  overflow: hidden;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.25s ease;
 }
 
 a.log:hover {
   border-color: var(--signal);
-  background: var(--ink-3);
+  background-color: var(--ink-3);
+  transform: translateY(-3px);
+}
+
+/* Mot géant en filigrane */
+.log-mark {
+  position: absolute;
+  right: -0.06em;
+  bottom: -0.2em;
+  font-family: var(--font-display);
+  font-size: 9rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--rule-strong);
+  pointer-events: none;
+  transition: -webkit-text-stroke-color 0.25s ease, transform 0.4s ease;
+}
+
+a.log:hover .log-mark {
+  -webkit-text-stroke-color: rgba(255, 176, 32, 0.45);
+  transform: translateX(-8px);
+}
+
+.log-link span {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+a.log:hover .log-link span {
+  transform: translate(4px, -2px);
 }
 
 .log-head {
@@ -93,9 +129,27 @@ a.log:hover {
 }
 
 .log-logo {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   border: 1px solid var(--rule-strong);
+  transition: transform 0.25s ease;
+}
+
+a.log:hover .log-logo {
+  transform: rotate(-6deg) scale(1.06);
+}
+
+.log-head,
+.log-title,
+.log-text,
+.log-link {
+  position: relative;
+  z-index: 1;
+}
+
+.log-link {
+  margin-top: auto;
+  max-width: 60%;
 }
 
 .log-title {
