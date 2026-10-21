@@ -7,7 +7,7 @@
         <div>
           <h2 class="chapter-title">Projets</h2>
           <p class="chapter-lead">
-            {{ projects.length }} projets, du jeu en Java à l'application fullstack. Ouvrez une ligne pour voir le
+            {{ projects.length }} projets, du projet phare Vytre au jeu en Java. Ouvrez une ligne pour voir le
             contexte, mon rôle et les compétences mobilisées.
           </p>
         </div>
@@ -109,7 +109,11 @@
           >
             <span class="entry-ref">P-{{ project.id }}</span>
             <span class="entry-title">
-              <strong>{{ project.title }}</strong>
+              <strong>
+                {{ project.title }}
+                <span v-if="project.featured" class="tag entry-wip entry-featured">★ Projet phare</span>
+                <span v-if="project.context === 'En cours'" class="tag tag-signal entry-wip">En cours</span>
+              </strong>
               <span class="entry-desc">{{ project.desc }}</span>
             </span>
             <span class="entry-stack">{{ project.tech }}</span>
@@ -157,9 +161,12 @@
                 </li>
               </ul>
 
-              <a :href="project.github" target="_blank" rel="noreferrer" class="btn entry-link">
+              <a v-if="project.github" :href="project.github" target="_blank" rel="noreferrer" class="btn entry-link">
                 Code source <span aria-hidden="true">↗</span>
               </a>
+              <p v-else class="entry-private meta">
+                <span aria-hidden="true">🔒</span> Code privé — démo ou présentation sur demande
+              </p>
             </div>
           </div>
         </article>
@@ -179,9 +186,8 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// Le projet qui mobilise le plus de compétences est ouvert par défaut
-const richest = [...props.projects].sort((a, b) => (b.competencies?.length ?? 0) - (a.competencies?.length ?? 0))[0]
-const openId = ref<string | null>(richest?.id ?? null)
+// Le projet phare (sinon le premier) est ouvert par défaut
+const openId = ref<string | null>((props.projects.find((p) => p.featured) ?? props.projects[0])?.id ?? null)
 
 const toggle = (id: string) => {
   openId.value = openId.value === id ? null : id
@@ -452,6 +458,21 @@ const resetFilters = () => {
   letter-spacing: -0.01em;
 }
 
+.entry-wip {
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.entry-featured {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--signal-ink);
+  font-weight: 600;
+}
+
 .entry-desc {
   font-size: 0.9rem;
   color: var(--paper-dim);
@@ -602,6 +623,13 @@ const resetFilters = () => {
 
 .entry-link {
   align-self: flex-start;
+}
+
+.entry-private {
+  align-self: flex-start;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--rule-strong);
+  color: var(--paper-dim);
 }
 
 @media (max-width: 900px) {

@@ -12,6 +12,8 @@ export interface Profile {
 export interface Project {
   id: string
   title: string
+  // Projet phare : badge dédié et ouvert par défaut
+  featured?: boolean
   // Utilisés par le filtre des projets
   type: string
   languages: string[]
@@ -19,6 +21,7 @@ export interface Project {
   desc: string
   longDesc: string
   impact: string
+  // Laisser vide pour un dépôt privé : le site affiche « Code privé » sans lien
   github: string
   image: string
   // Contexte affiché en badges (laisser vide pour masquer)

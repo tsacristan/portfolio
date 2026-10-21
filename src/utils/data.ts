@@ -34,118 +34,8 @@ export const appData: AppData = {
   projects: [
     {
       id: "01",
-      title: "Moteur de jeux (Java)",
-      type: "Jeu",
-      languages: ["Java"],
-      tech: "Java / POO / Algorithmique",
-      desc: "Développement d'un Latice et d'un Scrabble en Java : règles métier, gestion des tours et interface.",
-      longDesc:
-        "Conception d'un jeu Java structuré en POO avec implémentation des classes métier, gestion des tours et interface utilisateur cohérente.",
-      impact: "Architecture modulaire et réutilisable pour d'autres jeux de plateau.",
-      github: "https://github.com/tsacristan/latice",
-      image: "",
-      team: "Équipe de 3",
-      year: "2025",
-      competencies: [
-        {
-          code: "C1",
-          level: 3,
-          role: ["Conception architecture en POO", "Implémentation des règles métier", "Tests unitaires"],
-          deliverables: ["Code source sur GitHub"]
-        },
-        {
-          code: "C2",
-          level: 2,
-          role: ["Implémentation d'algorithmes de jeu", "Choix des structures de données"],
-          deliverables: ["Classes métier"]
-        }
-      ]
-    },
-    {
-      id: "02",
-      title: "PisTask",
-      type: "Application mobile",
-      languages: ["Kotlin"],
-      tech: "Kotlin / Android / MVVM",
-      desc: "Application Android de gestion de tâches en Kotlin, architecture MVVM.",
-      longDesc:
-        "Application Android native pour créer et suivre des tâches. Architecture MVVM et persistance locale avec Room.",
-      impact: "Développement mobile natif et mise en pratique d'une architecture en couches.",
-      github: "https://github.com/tsacristan/PisTask",
-      image: "",
-      context: "Projet étudiant",
-      team: "Binôme",
-      year: "2026",
-      competencies: [
-        {
-          code: "C1",
-          level: 3,
-          role: ["Développement de l'interface mobile", "Gestion du cycle de vie Android"],
-          deliverables: ["Code source Kotlin sur GitHub"]
-        },
-        {
-          code: "C4",
-          level: 2,
-          role: ["Modélisation des entités Room", "Requêtes de persistance locale"],
-          deliverables: ["Schéma Room"]
-        }
-      ]
-    },
-    {
-      id: "03",
-      title: "Netflix Clone",
-      type: "Site web",
-      languages: ["JavaScript", "HTML / CSS"],
-      tech: "JavaScript / Frontend",
-      desc: "Reproduction de l'interface Netflix avec navigation et contenu dynamique.",
-      longDesc:
-        "Interface web reproduisant l'expérience Netflix : navigation fluide, contenu chargé dynamiquement et design responsive.",
-      impact: "Maîtrise du JavaScript côté client et de l'intégration d'une interface complexe.",
-      github: "https://github.com/tsacristan/netflix-project",
-      image: "",
-      team: "Solo",
-      year: "2026",
-      competencies: [
-        {
-          code: "C1",
-          level: 3,
-          role: ["Développement frontend", "Intégration d'une API externe", "Design responsive"],
-          deliverables: ["Code source sur GitHub"]
-        }
-      ]
-    },
-    {
-      id: "04",
-      title: "RomanApp",
-      type: "Application mobile",
-      languages: ["C#"],
-      tech: "C# / .NET MAUI",
-      desc: "Application mobile multiplateforme développée avec .NET MAUI.",
-      longDesc:
-        "Application mobile cross-platform en C# avec .NET MAUI, une seule base de code pour Android et iOS, organisée en MVVM.",
-      impact: "Découverte du développement multiplateforme avec un codebase unique.",
-      github: "https://github.com/RomanJ07/RomanThurianApp",
-      image: "",
-      team: "Binôme",
-      year: "2026",
-      competencies: [
-        {
-          code: "C1",
-          level: 3,
-          role: ["Développement mobile multiplateforme", "Architecture MVVM"],
-          deliverables: ["Code source sur GitHub"]
-        },
-        {
-          code: "C6",
-          level: 3,
-          role: ["Travail sur un dépôt partagé", "Gestion de version Git"],
-          deliverables: ["Historique Git"]
-        }
-      ]
-    },
-    {
-      id: "05",
       title: "Vytre",
+      featured: true,
       type: "Application web",
       languages: ["TypeScript"],
       tech: "Vue 3 / Express / Prisma / TypeScript",
@@ -181,6 +71,154 @@ export const appData: AppData = {
           level: 3,
           role: ["Gestion de version Git en équipe", "Branches et revues"],
           deliverables: ["Historique Git", "README"]
+        }
+      ]
+    },
+    {
+      id: "02",
+      title: "Crok",
+      type: "Application mobile",
+      languages: ["TypeScript"],
+      tech: "React Native / Expo / SQLite",
+      desc: "Application de suivi nutritionnel : journal des repas, scan de codes-barres et suivi du poids.",
+      longDesc:
+        "Application mobile Android / iOS pour suivre son alimentation au quotidien. Journal des repas avec calories et macros, scan de codes-barres relié à l'API Open Food Facts, création de produits et de plats, suivi du poids et statistiques hebdomadaires. Données stockées localement avec SQLite. Développée avec Expo, React Native et TypeScript strict.",
+      impact: "Conception d'une application mobile complète, de la base de données locale à l'intégration d'une API externe.",
+      // Dépôt privé : pas de lien public
+      github: "",
+      image: "",
+      context: "En cours",
+      team: "Solo",
+      year: "2026",
+      competencies: [
+        {
+          code: "C1",
+          level: 3,
+          role: ["Développement mobile React Native", "Navigation Expo Router", "Scan de codes-barres"],
+          deliverables: ["Application Android / iOS"]
+        },
+        {
+          code: "C4",
+          level: 3,
+          role: ["Schéma de base SQLite", "Requêtes repas, produits et poids"],
+          deliverables: ["Schéma SQLite"]
+        },
+        {
+          code: "C2",
+          level: 2,
+          role: ["Calcul des besoins énergétiques et des macros", "Recherche de produits"],
+          deliverables: ["Module nutrition"]
+        }
+      ]
+    },
+    {
+      id: "03",
+      title: "Moteur de jeux (Java)",
+      type: "Jeu",
+      languages: ["Java"],
+      tech: "Java / POO / Algorithmique",
+      desc: "Développement d'un Latice et d'un Scrabble en Java : règles métier, gestion des tours et interface.",
+      longDesc:
+        "Conception d'un jeu Java structuré en POO avec implémentation des classes métier, gestion des tours et interface utilisateur cohérente.",
+      impact: "Architecture modulaire et réutilisable pour d'autres jeux de plateau.",
+      github: "https://github.com/tsacristan/latice",
+      image: "",
+      team: "Équipe de 3",
+      year: "2025",
+      competencies: [
+        {
+          code: "C1",
+          level: 3,
+          role: ["Conception architecture en POO", "Implémentation des règles métier", "Tests unitaires"],
+          deliverables: ["Code source sur GitHub"]
+        },
+        {
+          code: "C2",
+          level: 2,
+          role: ["Implémentation d'algorithmes de jeu", "Choix des structures de données"],
+          deliverables: ["Classes métier"]
+        }
+      ]
+    },
+    {
+      id: "04",
+      title: "PisTask",
+      type: "Application mobile",
+      languages: ["Kotlin"],
+      tech: "Kotlin / Android / MVVM",
+      desc: "Application Android de gestion de tâches en Kotlin, architecture MVVM.",
+      longDesc:
+        "Application Android native pour créer et suivre des tâches. Architecture MVVM et persistance locale avec Room.",
+      impact: "Développement mobile natif et mise en pratique d'une architecture en couches.",
+      github: "https://github.com/tsacristan/PisTask",
+      image: "",
+      context: "Projet étudiant",
+      team: "Binôme",
+      year: "2026",
+      competencies: [
+        {
+          code: "C1",
+          level: 3,
+          role: ["Développement de l'interface mobile", "Gestion du cycle de vie Android"],
+          deliverables: ["Code source Kotlin sur GitHub"]
+        },
+        {
+          code: "C4",
+          level: 2,
+          role: ["Modélisation des entités Room", "Requêtes de persistance locale"],
+          deliverables: ["Schéma Room"]
+        }
+      ]
+    },
+    {
+      id: "05",
+      title: "Netflix Clone",
+      type: "Site web",
+      languages: ["JavaScript", "HTML / CSS"],
+      tech: "JavaScript / Frontend",
+      desc: "Reproduction de l'interface Netflix avec navigation et contenu dynamique.",
+      longDesc:
+        "Interface web reproduisant l'expérience Netflix : navigation fluide, contenu chargé dynamiquement et design responsive.",
+      impact: "Maîtrise du JavaScript côté client et de l'intégration d'une interface complexe.",
+      github: "https://github.com/tsacristan/netflix-project",
+      image: "",
+      team: "Solo",
+      year: "2026",
+      competencies: [
+        {
+          code: "C1",
+          level: 3,
+          role: ["Développement frontend", "Intégration d'une API externe", "Design responsive"],
+          deliverables: ["Code source sur GitHub"]
+        }
+      ]
+    },
+    {
+      id: "06",
+      title: "RomanApp",
+      type: "Application mobile",
+      languages: ["C#"],
+      tech: "C# / .NET MAUI",
+      desc: "Application mobile multiplateforme développée avec .NET MAUI.",
+      longDesc:
+        "Application mobile cross-platform en C# avec .NET MAUI, une seule base de code pour Android et iOS, organisée en MVVM.",
+      impact: "Découverte du développement multiplateforme avec un codebase unique.",
+      github: "https://github.com/RomanJ07/RomanThurianApp",
+      image: "",
+      team: "Binôme",
+      year: "2026",
+      competencies: [
+        {
+          code: "C1",
+          level: 3,
+          role: ["Développement mobile multiplateforme", "Architecture MVVM"],
+          deliverables: ["Code source sur GitHub"]
+        },
+        {
+          code: "C6",
+          level: 3,
+          role: ["Travail sur un dépôt partagé", "Gestion de version Git"],
+          deliverables: ["Historique Git"]
         }
       ]
     }
