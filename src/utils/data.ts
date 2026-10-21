@@ -35,6 +35,8 @@ export const appData: AppData = {
     {
       id: "01",
       title: "Moteur de jeux (Java)",
+      type: "Jeu",
+      languages: ["Java"],
       tech: "Java / POO / Algorithmique",
       desc: "Développement d'un Latice et d'un Scrabble en Java : règles métier, gestion des tours et interface.",
       longDesc:
@@ -60,6 +62,8 @@ export const appData: AppData = {
     {
       id: "02",
       title: "PisTask",
+      type: "Application mobile",
+      languages: ["Kotlin"],
       tech: "Kotlin / Android / MVVM",
       desc: "Application Android de gestion de tâches en Kotlin, architecture MVVM.",
       longDesc:
@@ -85,6 +89,8 @@ export const appData: AppData = {
     {
       id: "03",
       title: "Netflix Clone",
+      type: "Site web",
+      languages: ["JavaScript", "HTML / CSS"],
       tech: "JavaScript / Frontend",
       desc: "Reproduction de l'interface Netflix avec navigation et contenu dynamique.",
       longDesc:
@@ -104,12 +110,14 @@ export const appData: AppData = {
     {
       id: "04",
       title: "RomanApp",
+      type: "Application mobile",
+      languages: ["C#"],
       tech: "C# / .NET MAUI",
       desc: "Application mobile multiplateforme développée avec .NET MAUI.",
       longDesc:
         "Application mobile cross-platform en C# avec .NET MAUI, une seule base de code pour Android et iOS, organisée en MVVM.",
       impact: "Découverte du développement multiplateforme avec un codebase unique.",
-      github: "https://github.com/RomanJ07/RomanApp",
+      github: "https://github.com/RomanJ07/RomanThurianApp",
       image: "",
       competencies: [
         {
@@ -129,6 +137,8 @@ export const appData: AppData = {
     {
       id: "05",
       title: "Vytre",
+      type: "Application web",
+      languages: ["TypeScript"],
       tech: "Vue 3 / Express / Prisma / TypeScript",
       desc: "Éditeur de procédures opérationnelles avec mode lecteur, drag & drop et gestion multimédia.",
       longDesc:

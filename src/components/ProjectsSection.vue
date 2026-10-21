@@ -13,6 +13,72 @@
         </div>
       </header>
 
+      <div class="filters" role="search" aria-label="Filtrer les projets">
+        <label class="filter-search">
+          <span class="meta">Rechercher</span>
+          <input v-model="query" type="search" placeholder="titre, techno, mot-clé…" />
+        </label>
+
+        <div class="filter-group">
+          <span class="meta">Type</span>
+          <div class="chips">
+            <button
+              v-for="type in typeOptions"
+              :key="type"
+              type="button"
+              :class="['chip', { active: activeType === type }]"
+              :aria-pressed="activeType === type"
+              :disabled="countFor({ type }) === 0 && activeType !== type"
+              @click="activeType = activeType === type ? null : type"
+            >
+              {{ type }} <span class="chip-count">{{ countFor({ type }) }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <span class="meta">Langage</span>
+          <div class="chips">
+            <button
+              v-for="lang in languageOptions"
+              :key="lang"
+              type="button"
+              :class="['chip', { active: activeLang === lang }]"
+              :aria-pressed="activeLang === lang"
+              :disabled="countFor({ lang }) === 0 && activeLang !== lang"
+              @click="activeLang = activeLang === lang ? null : lang"
+            >
+              {{ lang }} <span class="chip-count">{{ countFor({ lang }) }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <span class="meta">Compétence</span>
+          <div class="chips">
+            <button
+              v-for="code in compOptions"
+              :key="code"
+              type="button"
+              :class="['chip', { active: activeComp === code }]"
+              :aria-pressed="activeComp === code"
+              :title="competenceTitle(code)"
+              :disabled="countFor({ comp: code }) === 0 && activeComp !== code"
+              @click="activeComp = activeComp === code ? null : code"
+            >
+              {{ code }} <span class="chip-count">{{ countFor({ comp: code }) }}</span>
+            </button>
+          </div>
+        </div>
+
+        <p class="filter-status meta" aria-live="polite">
+          <span>{{ filtered.length }} / {{ projects.length }} projets</span>
+          <button v-if="isFiltering" type="button" class="filter-reset" @click="resetFilters">
+            Réinitialiser ✕
+          </button>
+        </p>
+      </div>
+
       <div class="register" role="list">
         <div class="register-head meta" aria-hidden="true">
           <span>Réf.</span>
@@ -22,8 +88,13 @@
           <span></span>
         </div>
 
+        <p v-if="!filtered.length" class="empty">
+          Aucun projet ne correspond.
+          <button type="button" class="filter-reset" @click="resetFilters">Tout afficher</button>
+        </p>
+
         <article
-          v-for="project in projects"
+          v-for="project in filtered"
           :key="project.id"
           :class="['entry', { open: openId === project.id }]"
           role="listitem"
@@ -98,7 +169,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import type { Project, Competences } from "@/types"
 
 interface Props {
@@ -119,9 +190,179 @@ const contextChips = (project: Project) =>
   [project.context, project.team, project.year].filter((chip): chip is string => Boolean(chip))
 
 const competenceTitle = (code: string) => props.competences.items.find((c) => c.code === code)?.title ?? ""
+
+// ---------- Filtres ----------
+const query = ref("")
+const activeType = ref<string | null>(null)
+const activeLang = ref<string | null>(null)
+const activeComp = ref<string | null>(null)
+
+const typeOptions = [...new Set(props.projects.map((p) => p.type))]
+const languageOptions = [...new Set(props.projects.flatMap((p) => p.languages))]
+const compOptions = props.competences.items
+  .map((c) => c.code)
+  .filter((code) => props.projects.some((p) => p.competencies?.some((c) => c.code === code)))
+
+const normalize = (text: string) => text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+
+interface Criteria {
+  type?: string | null
+  lang?: string | null
+  comp?: string | null
+  text?: string
+}
+
+const matches = (project: Project, { type, lang, comp, text }: Criteria) => {
+  if (type && project.type !== type) return false
+  if (lang && !project.languages.includes(lang)) return false
+  if (comp && !project.competencies?.some((c) => c.code === comp)) return false
+  if (text) {
+    const haystack = normalize([project.title, project.desc, project.tech, project.type, ...project.languages].join(" "))
+    if (!haystack.includes(normalize(text))) return false
+  }
+  return true
+}
+
+const current = computed<Criteria>(() => ({
+  type: activeType.value,
+  lang: activeLang.value,
+  comp: activeComp.value,
+  text: query.value.trim()
+}))
+
+const filtered = computed(() => props.projects.filter((p) => matches(p, current.value)))
+
+// Nombre de résultats si on choisit cette option, en gardant les autres filtres
+const countFor = (override: Criteria) =>
+  props.projects.filter((p) => matches(p, { ...current.value, ...override })).length
+
+const isFiltering = computed(() =>
+  Boolean(activeType.value || activeLang.value || activeComp.value || query.value.trim())
+)
+
+const resetFilters = () => {
+  query.value = ""
+  activeType.value = null
+  activeLang.value = null
+  activeComp.value = null
+}
 </script>
 
 <style scoped>
+/* Barre de filtres */
+/* Une ligne par critère : libellé à gauche, options à droite */
+.filters {
+  display: grid;
+  gap: 0.9rem;
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  border: 1px solid var(--rule);
+  background: var(--ink-2);
+}
+
+.filter-search,
+.filter-group {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.filter-search input {
+  width: 100%;
+  max-width: 360px;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.filter-search input:focus {
+  outline: none;
+  border-color: var(--signal);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--rule-strong);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--paper-dim);
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.chip:hover:not(:disabled) {
+  border-color: var(--signal);
+  color: var(--paper);
+}
+
+.chip.active {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--signal-ink);
+}
+
+.chip:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.chip-count {
+  font-size: 0.68rem;
+  opacity: 0.7;
+}
+
+.filter-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--rule);
+}
+
+.filter-reset {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--signal);
+}
+
+.filter-reset:hover {
+  text-decoration: underline;
+}
+
+.empty {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--paper-dim);
+}
+
+@media (max-width: 600px) {
+  .filter-search,
+  .filter-group {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+}
+
 .register {
   border-top: 1px solid var(--rule-strong);
 }

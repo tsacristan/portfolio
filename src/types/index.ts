@@ -12,6 +12,9 @@ export interface Profile {
 export interface Project {
   id: string
   title: string
+  // Utilisés par le filtre des projets
+  type: string
+  languages: string[]
   tech: string
   desc: string
   longDesc: string

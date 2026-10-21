@@ -14,8 +14,8 @@
         </h1>
 
         <p class="hero-lead">
-          Je développe des applications web et mobiles, et je construis mon parcours vers la
-          <mark class="redact">cybersécurité</mark> : systèmes, réseaux et sécurité applicative.
+          Je développe des applications web et mobiles, et je recherche à continuer vers un master en
+          <mark class="redact">cybersécurité</mark>.
         </p>
 
         <div class="hero-actions">
